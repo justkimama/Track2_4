@@ -1,6 +1,7 @@
 # hotel
 
 EC2: http://ec2-3-34-227-211.ap-northeast-2.compute.amazonaws.com/
+
 Google Drive: https://drive.google.com/file/d/1tQwLOlL_7VYKLDGv36Dhqc5n8RdJaxUd/view?usp=sharing
 
 Google Drive의 경우 발표 자료를 동영상 형식으로 업로드했습니다.
