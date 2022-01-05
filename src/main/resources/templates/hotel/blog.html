@@ -1,0 +1,114 @@
+<!doctype html>
+<html class="no-js" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/hotel_layout1}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+
+        $(document).ready(function(){
+            $("#searchBtn").on("click", function (e) {
+                e.preventDefault();
+                page(0);
+            });
+        });
+
+        function page(page) {
+            var searchBy = $("#searchBy").val();
+            var searchQuery = $("#searchQuery").val();
+
+            location.href="/admin/requests/" + page + "?searchBy="
+                + searchBy + "&searchQuery=" + searchQuery;
+        }
+
+        function detail(id){
+            location.href="/admin/requests/case=" + id;
+        }
+
+    </script>
+</th:block>
+<div layout:fragment="content">
+    <main>
+        <!-- Hero Area Start-->
+        <div class="slider-area hero-bg1  hero-overly">
+            <div class="single-slider  slider-height3 d-flex align-items-center">
+                <div class="container">
+                    <div class="row justify-content-center ">
+                        <div class="col-xl-7 col-lg-11">
+                            <!-- Hero Caption -->
+                            <div class="hero-caption hero-caption3">
+                                <h1>Blog</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Hero Area End--> 
+        <!-- Blog Area Start-->
+        <section class="blog_area section-padding">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="mb-5 mb-lg-0">
+                        <div class="blog_left_sidebar" style="width: 65% !important; margin: auto">
+                            <div th:each="blog, status: ${hotel_board.getContent()}">
+                                <article class="blog_item">
+                                    <div class="blog_item_img">
+                                        <img class="card-img rounded-0" th:src="${blog.imgPath}" alt="">
+                                    </div>
+                                    <div class="blog_details">
+                                        <a class="d-inline-block" th:href="'/hotel/blog/'+${blog.id}">
+                                            <h2 class="blog-head" style="color: #2d2d2d;"><span th:text="${blog.title}">title</span>
+                                            </h2>
+                                        </a>
+                                        <p><span style="display: inline-block;" th:text="${blog.content}">content</span></p>
+                                        <ul class="blog-info-link">
+                                            <li><i class="fa fa-user"></i>Review</li>
+                                            <li><i class="fa fa-calendar-day"></i><span th:text="${blog.createdDate}"></span></li>
+                                        </ul>
+                                    </div>
+                                </article>
+                            </div>
+                            <div style="text-align: right !important;;" sec:authorize="isAuthenticated()" >
+                                <button style="border: none; background-color: #E29C89; color: white;" onclick="location.href='/hotel/blog/write'" class="boxed-btn2" type="button">Write</button>
+                            </div>
+
+                            <nav class="blog-pagination justify-content-center d-flex">
+                                <ul class="pagination">
+                                    <li class="page-item" th:classappend="${hotel_board.pageable.pageNumber==0} ? 'disabled'">
+                                        <a th:href="@{/hotel/blog(page=${hotel_board.pageable.pageNumber -1})}" class="page-link" aria-label="Previous">
+                                            <i class="ti-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${i==hotel_board.pageable.pageNumber} ? 'active'"
+                                        th:each="i : ${#numbers.sequence(startPage,endPage -1) }">
+                                        <a class="page-link" th:href="@{/hotel/blog(page=${i})}" th:text="${i+1}"></a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a th:href="@{/hotel/blog(page=${hotel_board.pageable.pageNumber +1})}" class="page-link" aria-label="Next">
+                                            <i class="ti-angle-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Blog Area End -->
+    </main>
+    <!-- Scroll Up -->
+    <div id="back-top">
+        <a class="wrapper" title="Go to Top" href="#">
+            <div class="arrows-container">
+                <div class="arrow arrow-one">
+                </div>
+                <div class="arrow arrow-two">
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+</body>
+</html>

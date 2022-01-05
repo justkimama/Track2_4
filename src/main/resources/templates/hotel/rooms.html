@@ -1,0 +1,123 @@
+<!doctype html>
+<html class="no-js" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/hotel_layout1}">
+
+<!--? Preloader Start -->
+<!--<div id="preloader-active">-->
+<!--    <div class="preloader d-flex align-items-center justify-content-center">-->
+<!--        <div class="preloader-inner position-relative">-->
+<!--            <div class="preloader-circle"></div>-->
+<!--            <div class="preloader-img pere-text">-->
+<!--                <img id="myBtn" th:src="@{/hotel/assets/img/icon/loder.png}" alt="loder">-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<body>
+<div layout:fragment="content">
+    <main>
+        <!-- Hero Area Start-->
+        <div class="slider-area hero-bg1  hero-overly">
+            <div class="single-slider  slider-height2 d-flex align-items-center">
+                <div class="container">
+                    <div class="row justify-content-center ">
+                        <div class="col-xl-7 col-lg-11">
+                            <!-- Hero Caption -->
+                            <div class="hero-caption hero-caption2 pt-10">
+                                <h1>Our Rooms</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <form action="/hotel/search" method="post" name="searchForm" class="search-box pb-45">
+                    <div class="row align-items-end">
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                            <!-- select in date -->
+                            <div class="date-pic mb-15">
+                                <label for="#">Check In Date*</label>
+                                <div class="boking-datepicker">
+                                    <input id="datepicker1" name="checkin_date"  placeholder="Check in" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                            <!-- select in date -->
+                            <div class="date-pic mb-15">
+                                <label for="#">Check Out Date*</label>
+                                <div class="boking-datepicker">
+                                    <input id="datepicker2" name="checkout_date"  placeholder="Check out" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6">
+                            <div class="select-form mb-15">
+                                <select name="select1" id="select1">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6">
+                            <div class="select-form mb-15" >
+                                <select name="select2" id="select2" >
+                                     <option>東京都</option>
+                                     <option>北海道</option>
+                                     <option>大阪府</option>
+                                     <option>京都府</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-4 col-md-4 col-sm-6">
+                            <div class="search-form">
+                                <a href="javascript:document.searchForm.submit();">Search</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>	
+            </div>
+        </div>
+        <!--Hero Area End--> 
+        <!-- location-house start -->
+        <div class="location-house section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-5 col-md-8">
+                        <!-- Section Tittle -->
+                        <div class="section-tittle mb-50">
+                            <h2>Our Rooms</h2>
+                            <p>The concept and service of the best luxury hotels in Asturias in our sophisticated.</p>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4" th:each="hotel : ${hotel_room}">
+                        <!-- Single -->
+                        <div class="single-location single-location2 mb-30" >
+                            <img th:src="${hotel.hotel_room_img.get(0).img_Server_Path}" alt="">
+                            <div class="location-contents">
+                                <h3><a href="#" th:text="${hotel.roomName}"> </a></h3>
+                                <p th:text="${hotel.maxPeople}+' Max People'"></p>
+                                <div class="price">
+                                    <span>Started from<span th:text="'$'+${hotel.price}"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </main>
+</div>
+</body>
+</html>

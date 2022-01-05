@@ -1,0 +1,268 @@
+<!doctype html>
+<html class="no-js" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/hotel_layout1}"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <script>
+        let infoWindow;
+
+        function CenterControl(controlDiv, map) {
+
+            const controlUI = document.createElement("div");
+
+            controlUI.style.backgroundColor = "#fff";
+            controlUI.style.border = "2px solid #fff";
+            controlUI.style.borderRadius = "3px";
+            controlUI.style.boxShadow = "0 2px 6px rgba(0,0,0,.3)";
+            controlUI.style.cursor = "pointer";
+            controlUI.style.marginTop = "8px";
+            controlUI.style.marginBottom = "22px";
+            controlUI.style.textAlign = "center";
+            controlUI.title = "Click to recenter the map";
+            controlDiv.appendChild(controlUI);
+
+            const controlText = document.createElement("div");
+
+            controlText.style.color = "rgb(25,25,25)";
+            controlText.style.fontFamily = "Roboto,Arial,sans-serif";
+            controlText.style.fontSize = "16px";
+            controlText.style.lineHeight = "38px";
+            controlText.style.paddingLeft = "5px";
+            controlText.style.paddingRight = "5px";
+            controlText.innerHTML = "Pan to Current Location";
+            controlUI.appendChild(controlText);
+
+            controlUI.addEventListener("click", () => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const pos = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude,
+                            };
+
+                            infoWindow.setPosition(pos);
+                            // infoWindow.setContent("Go back to Rolax Resort?");
+                            infoWindow.setContent('<a href="javascript:return false;" id="test">Go back to Rolax Resort</a>');
+                            google.maps.event.addDomListener(infoWindow, 'domready', function (){
+                                $('#test').click(function () {
+                                    const posBack = {
+                                        lat: 33.558671,
+                                        lng: 126.826370,
+                                    };
+                                    infoWindow.close();
+                                    map.setCenter(posBack);
+                                })
+                            });
+                            infoWindow.open(map);
+                            map.setCenter(pos);
+                        },
+                        () => {
+                            handleLocationError(true, infoWindow, map.getCenter());
+                        }
+                    );
+                } else {
+                    handleLocationError(false, infoWindow, map.getCenter());
+                }
+            });
+        }
+
+        function showMap() {
+
+            var myLatlng = new google.maps.LatLng(33.558671, 126.826370);
+
+            var mapOptions = {
+                center: myLatlng,
+                zoom: 12,
+            };
+
+            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+            var marker = new google.maps.Marker({
+                position: myLatlng,
+                map,
+                title:"Rolax Resort"
+            });
+
+            var markerWindow = new google.maps.InfoWindow({
+                content:"제주도 구좌음 행원리 123-1 Rolax Resort"
+            });
+
+            marker.addListener("click", () => {
+                markerWindow.open(map,marker);
+            });
+
+            marker.setMap(map);
+
+            infoWindow = new google.maps.InfoWindow();
+
+            const locationButton = document.createElement("button");
+
+            const centerControlDiv = document.createElement("div");
+
+            CenterControl(centerControlDiv, map);
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(
+                browserHasGeolocation
+                    ? "Error: The Geolocation service failed."
+                    : "Error: Your browser doesn't support geolocation."
+            );
+            infoWindow.open(map);
+        }
+    </script>
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            window.onload = showMap();
+
+            document.addEventListener('keydown', function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                }
+            }, true)
+
+            function onceSubmit() {
+
+                document.getElementById('sendButton').hidden=true;
+                alert("Please wait a few seconds...");
+
+
+            }
+        </script>
+    </th:block>
+    <style>
+        #map {
+            width: 100%;
+            height: 400px;
+            background-color: grey;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <main>
+        <!-- Hero Area Start-->
+        <div class="slider-area hero-bg1  hero-overly">
+            <div class="single-slider  slider-height3 d-flex align-items-center">
+                <div class="container">
+                    <div class="row justify-content-center ">
+                        <div class="col-xl-7 col-lg-11">
+                            <!-- Hero Caption -->
+                            <div class="hero-caption hero-caption3">
+                                <h1>Contact Us</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Hero Area End--> 
+        <!--  Contact Area start  -->
+        <section class="contact-section">
+            <div class="container">
+                <div class="d-none d-sm-block mb-5 pb-4" id="map">
+<!--                    <div id="map">-->
+
+<!--                    </div>-->
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h2 class="contact-title">Get in Touch</h2>
+                    </div>
+                    <div sec:authorize="isAnonymous()" class="col-lg-8">
+                        <form class="form-contact contact_form" name="contactForm" role="form" id="contactForm" action="/hotel/email/send" method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="name" id="name" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter your name'" placeholder="Enter your name">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <input class="form-control valid" name="email" id="email" type="email" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter email address'" placeholder="Email">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input class="form-control" name="subject" id="subject" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'" placeholder="Enter Subject">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="message"  cols="30" rows="9" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'" placeholder=" Enter Message"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input style="font-weight: unset;" name="attachment" id="attachment" type="file" accept="image/*" onchange="fileUploadCheck(this.value)">
+                                        <input type="hidden" name="target_name" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input type="submit" onclick="javascript:onceSubmit()" id="sendButton" class="button button-contactForm boxed-btn">
+                            </div>
+                        </form>
+                    </div>
+                    <div sec:authorize="isAuthenticated()" class="col-lg-8">
+                        <form class="form-contact contact_form" role="form" action="/hotel/email/sendAuth" method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input class="form-control" name="subject" id="subject" type="text" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Subject'" placeholder="Enter Subject">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control w-100" name="message"  cols="30" rows="9" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Enter Message'" placeholder=" Enter Message"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <input style="font-weight: unset;" name="attachment" id="attachment" type="file" onfocus="this.placeholder = ''" onblur="this.placeholder = 'File'">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <input id="authName" name="authName" sec:authorize="isAuthenticated()" type="hidden" th:value="${#authorization.authentication.principal.user.name}">
+                                <input id="authEmail" name="authEmail" sec:authorize="isAuthenticated()" type="hidden" th:value="${#authorization.authentication.principal.user.email}">
+                                <input type="submit" id="sendButton" class="button button-contactForm boxed-btn" onclick="onceSubmit()">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-3 offset-lg-1">
+                        <div class="media contact-info">
+                            <span class="contact-info__icon"><i class="ti-home"></i></span>
+                            <div class="media-body">
+                                <h3>Buttonwood, California.</h3>
+                                <p>Rosemead, CA 91770</p>
+                            </div>
+                        </div>
+                        <div class="media contact-info">
+                            <span class="contact-info__icon"><i class="ti-tablet"></i></span>
+                            <div class="media-body">
+                                <h3>+1 253 565 2365</h3>
+                                <p>Mon to Fri 9am to 6pm</p>
+                            </div>
+                        </div>
+                        <div class="media contact-info">
+                            <span class="contact-info__icon"><i class="ti-email"></i></span>
+                            <div class="media-body">
+                                <h3>support@colorlib.com</h3>
+                                <p>Send us your query anytime!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Contact Area End -->
+    </main>
+</div>
+</body>
+</html>
