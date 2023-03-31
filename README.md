@@ -2,7 +2,7 @@
 
 EC2: http://ec2-3-34-227-211.ap-northeast-2.compute.amazonaws.com/
 
-Now stopped the EC2 instance.
+Now the EC2 instance terminated.
 
 Google Drive: https://drive.google.com/file/d/1tQwLOlL_7VYKLDGv36Dhqc5n8RdJaxUd/view?usp=sharing
 
